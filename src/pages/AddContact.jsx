@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = "https://playground.4geeks.com/contact/agendas/vivfeijoo/contacts";
+
 const AddContact = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    full_name: "",
+    name: "",
     email: "",
     phone: "",
     address: ""
@@ -16,19 +18,58 @@ const AddContact = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log("Contacto creado:", form);
-    navigate("/");
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(form)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        alert("Error al guardar el contacto.");
+      });
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Add a new contact</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="full_name" placeholder="Full Name" onChange={handleChange} required />
-        <input name="email" placeholder="Enter email" onChange={handleChange} required />
-        <input name="phone" placeholder="Enter phone" onChange={handleChange} required />
-        <input name="address" placeholder="Enter address" onChange={handleChange} required />
-        <button type="submit">save</button>
+      <form onSubmit={handleSubmit} className="add-contact-form">
+        <input
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="phone"
+          placeholder="Phone"
+          value={form.phone}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="address"
+          placeholder="Address"
+          value={form.address}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit" className="btn btn-primary">Save</button>
       </form>
       <a onClick={() => navigate("/")} className="back-link">
         or get back to contacts
@@ -38,4 +79,3 @@ const AddContact = () => {
 };
 
 export default AddContact;
-

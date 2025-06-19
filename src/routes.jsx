@@ -1,16 +1,15 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import AddContact from "./pages/AddContact";
+import EditContact from "./pages/EditContact"; // 👈 Asegúrate de importar esto
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/add" element={<AddContact />} />
-        <Route path="/edit/:id" element={<AddContact />} />
-      </Route>
+      <Route path="/" element={<Home />} />
+      <Route path="/add" element={<AddContact />} />
+      <Route path="/edit/:id" element={<EditContact />} /> {/* 👈 Esta es la nueva ruta */}
     </Routes>
   );
 };
