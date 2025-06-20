@@ -2,102 +2,89 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const EditContact = () => {
-  const { id } = useParams(); // ID del contacto
   const navigate = useNavigate();
-  const AGENDA_SLUG = "vivfeijoo";
-  const API_URL = `https://playground.4geeks.com/contact/agendas/${AGENDA_SLUG}/contacts/${id}`;
+  const { id } = useParams();
 
   const [form, setForm] = useState({
-    name: "",
+    full_name: "",
     email: "",
     phone: "",
     address: ""
   });
 
-  const [error, setError] = useState(null);
-
-  // Cargar datos del contacto existente
+  // Cargar datos del contacto al iniciar
   useEffect(() => {
-    fetch(API_URL)
-      .then(res => {
-        if (!res.ok) throw new Error("Error al cargar el contacto");
-        return res.json();
-      })
+    fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`)
+      .then(res => res.json())
       .then(data => {
         setForm({
-          name: data.name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          address: data.address || ""
+          full_name: data.full_name,
+          email: data.email,
+          phone: data.phone,
+          address: data.address
         });
       })
-      .catch(err => {
-        console.error("Error:", err);
-        setError("No se pudo cargar el contacto.");
-      });
+      .catch(error => console.error("❌ Error al cargar contacto:", error));
   }, [id]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    fetch(API_URL, {
+    const updatedContact = {
+      ...form,
+      agenda_slug: "vivifeijoo_agenda"
+    };
+
+    fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedContact)
     })
-      .then(res => {
-        if (!res.ok) throw new Error("Error al actualizar el contacto");
-        return res.json();
-      })
-      .then(() => {
+      .then(res => res.json())
+      .then(data => {
+        console.log("✔ Contacto actualizado:", data);
         navigate("/");
       })
-      .catch(err => {
-        console.error("Error:", err);
-        setError("No se pudo actualizar el contacto.");
-      });
+      .catch(error => console.error("❌ Error al actualizar:", error));
   };
 
   return (
     <div>
       <h2>Edit Contact</h2>
-      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
-          name="name"
-          value={form.name}
-          placeholder="Full Name"
+          name="full_name"
+          value={form.full_name}
           onChange={handleChange}
+          placeholder="Full Name"
           required
         />
         <input
           name="email"
           value={form.email}
-          placeholder="Enter email"
           onChange={handleChange}
+          placeholder="Enter email"
           required
         />
         <input
           name="phone"
           value={form.phone}
-          placeholder="Enter phone"
           onChange={handleChange}
+          placeholder="Enter phone"
           required
         />
         <input
           name="address"
           value={form.address}
-          placeholder="Enter address"
           onChange={handleChange}
+          placeholder="Enter address"
           required
         />
-        <button type="submit">Save changes</button>
+        <button type="submit">save</button>
       </form>
       <a onClick={() => navigate("/")} className="back-link">
         or get back to contacts
@@ -107,3 +94,4 @@ const EditContact = () => {
 };
 
 export default EditContact;
+

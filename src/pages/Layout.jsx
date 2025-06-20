@@ -9,5 +9,3 @@ export const Layout = () => {
 };
 
 export default Layout;
-
-
