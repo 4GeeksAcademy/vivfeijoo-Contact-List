@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const AddContact = () => {
   const [form, setForm] = useState({
@@ -93,7 +93,12 @@ const AddContact = () => {
           required
         />
         <button type="submit" className="btn btn-success w-100">Save</button>
-        
+
+        <div className="text-center mt-3">
+          <Link to="/" className="text-decoration-underline text-primary">
+            or get back to contacts
+          </Link>
+        </div>
       </form>
     </div>
   );
