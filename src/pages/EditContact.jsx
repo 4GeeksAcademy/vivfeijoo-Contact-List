@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const EditContact = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  const API_URL = "https://playground.4geeks.com/contact/agendas/vivfeijoo";
 
   const [form, setForm] = useState({
     full_name: "",
@@ -12,86 +14,129 @@ const EditContact = () => {
     address: ""
   });
 
-  // Cargar datos del contacto al iniciar
-  useEffect(() => {
-    fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setForm({
-          full_name: data.full_name,
-          email: data.email,
-          phone: data.phone,
-          address: data.address
-        });
-      })
-      .catch(error => console.error("❌ Error al cargar contacto:", error));
-  }, [id]);
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  useEffect(() => {
+  const fetchContact = async () => {
+    try {
+      const response = await fetch(`${API_URL}/contacts`);
+      const data = await response.json();
+
+      const contact = data.contacts.find(c => c.id === parseInt(id));
+      if (!contact) throw new Error("Contact not found");
+
+      setForm({
+        full_name: contact.full_name || contact.name || "",
+        email: contact.email || "",
+        phone: contact.phone || "",
+        address: contact.address || ""
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error loading contact:", error);
+    }
   };
 
-  const handleSubmit = e => {
+  fetchContact();
+}, [id]);
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedContact = {
-      ...form,
-      agenda_slug: "vivifeijoo_agenda"
-    };
+    try {
+      const response = await fetch(`${API_URL}/contacts/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          full_name: form.full_name,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          agenda_slug: "vivfeijoo"
+        })
+      });
 
-    fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedContact)
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log("✔ Contacto actualizado:", data);
-        navigate("/");
-      })
-      .catch(error => console.error("❌ Error al actualizar:", error));
+      if (!response.ok) throw new Error("Failed to update contact");
+      navigate("/");
+    } catch (error) {
+      console.error("Error updating contact:", error);
+    }
   };
 
+  if (loading) return <p className="text-center mt-5">Loading...</p>;
+
   return (
-    <div>
-      <h2>Edit Contact</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="full_name"
-          value={form.full_name}
-          onChange={handleChange}
-          placeholder="Full Name"
-          required
-        />
-        <input
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Enter email"
-          required
-        />
-        <input
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-          placeholder="Enter phone"
-          required
-        />
-        <input
-          name="address"
-          value={form.address}
-          onChange={handleChange}
-          placeholder="Enter address"
-          required
-        />
-        <button type="submit">save</button>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Edit Contact</h2>
+      <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "600px" }}>
+        <div className="mb-3">
+          <label className="form-label">Full Name</label>
+          <input
+            type="text"
+            className="form-control"
+            name="full_name"
+            value={form.full_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Phone</label>
+          <input
+            type="tel"
+            className="form-control"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Address</label>
+          <input
+            type="text"
+            className="form-control"
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="d-flex justify-content-between">
+          <button type="button" className="btn btn-secondary" onClick={() => navigate("/")}>
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-primary">
+            Save Changes
+          </button>
+        </div>
       </form>
-      <a onClick={() => navigate("/")} className="back-link">
-        or get back to contacts
-      </a>
     </div>
   );
 };
 
 export default EditContact;
+
+
 

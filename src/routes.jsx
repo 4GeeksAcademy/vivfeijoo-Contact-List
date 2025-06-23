@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import AddContact from "./pages/AddContact";
-// Si ya tienes EditContact, también:
 import EditContact from "./pages/EditContact";
 
 const AppRoutes = () => {
@@ -14,5 +13,5 @@ const AppRoutes = () => {
     </Routes>
   );
 };
-
+<Route path="/edit/:id" element={<EditContact />} />
 export default AppRoutes;

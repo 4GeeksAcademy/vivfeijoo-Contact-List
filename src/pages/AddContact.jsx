@@ -18,13 +18,14 @@ const AddContact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newContact = {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      address: form.address,
-      agenda_slug: "vivfeijoo"
-    };
+  const newContact = {
+    name: form.name,
+    full_name: form.name,
+    email: form.email,
+    phone: form.phone,
+    address: form.address,
+    agenda_slug: "vifeijoo"
+  };
 
     console.log("Enviando contacto:", newContact);
 
