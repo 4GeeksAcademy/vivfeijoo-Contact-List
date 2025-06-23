@@ -1,45 +1,25 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ContactCard = ({ contact, onDelete }) => {
-  const navigate = useNavigate();
-
   return (
-    <div className="card mb-3 shadow-sm">
-      <div className="card-body d-flex align-items-center">
-        <img
-          src="https://via.placeholder.com/100"
-          alt="profile"
-          className="rounded-circle me-3"
-        />
-        <div className="flex-grow-1">
-          <h5 className="card-title mb-1">{contact.name}</h5>
-          <p className="card-text mb-1">
-            <i className="fas fa-map-marker-alt me-2"></i>
-            {contact.address}
-          </p>
-          <p className="card-text mb-1">
-            <i className="fas fa-phone me-2"></i>
-            {contact.phone}
-          </p>
-          <p className="card-text">
-            <i className="fas fa-envelope me-2"></i>
-            {contact.email}
-          </p>
+    <div className="card mb-3 mx-auto" style={{ maxWidth: "600px" }}>
+      <div className="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <h5 className="card-title mb-1">{contact.full_name}</h5>
+          <p className="card-text mb-1">{contact.email}</p>
+          <p className="card-text mb-1">{contact.phone}</p>
+          <p className="card-text mb-0">{contact.address}</p>
         </div>
         <div>
-          <button
-            className="btn btn-outline-primary me-2"
-            onClick={() => navigate(`/edit/${contact.id}`)}
-          >
-            <i className="fas fa-pencil-alt"></i>
-          </button>
-          <button
-            className="btn btn-outline-danger"
+          <Link to={`/edit/${contact.id}`}>
+            <i className="fas fa-pencil-alt me-3 text-primary"></i>
+          </Link>
+          <i
+            className="fas fa-trash text-danger"
+            style={{ cursor: "pointer" }}
             onClick={() => onDelete(contact.id)}
-          >
-            <i className="fas fa-trash"></i>
-          </button>
+          ></i>
         </div>
       </div>
     </div>
@@ -47,6 +27,3 @@ const ContactCard = ({ contact, onDelete }) => {
 };
 
 export default ContactCard;
-
-
-

@@ -1,59 +1,50 @@
 body {
+  background-color: #f8f9fa;
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 2rem;
 }
 
-.container {
-  max-width: 700px;
+.custom-container {
+  max-width: 600px;
   margin: 0 auto;
+}
+
+h1, h2 {
+  font-weight: bold;
+  color: #333;
 }
 
 .card {
   background-color: #fff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-input {
-  display: block;
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+input.form-control {
+  border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
-button.btn-success {
-  background-color: #28a745;
-  color: white;
-}
-
-button.btn-outline-danger {
-  background-color: white;
-  border: 1px solid red;
-  color: red;
-}
-
-button.btn-outline-primary {
-  background-color: white;
-  border: 1px solid #007bff;
-  color: #007bff;
-}
-
-a {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: none;
+.custom-button {
+  font-weight: bold;
+  padding: 10px 20px;
 }

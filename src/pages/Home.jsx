@@ -1,62 +1,60 @@
 import React, { useEffect, useState } from "react";
 import ContactCard from "../components/ContactCard";
-import { useNavigate } from "react-router-dom";
-
-const API_URL = "https://playground.4geeks.com/contact/agendas/vivfeijoo/contacts";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [contacts, setContacts] = useState([]);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-  fetch(API_URL)
-    .then(res => {
-      if (!res.ok) throw new Error("Error al cargar los contactos");
-      return res.json();
-    })
-    .then(data => {
-      setContacts(data.contacts || []);
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      setError("Error al cargar los contactos");
-    });
-}, []);
+  const API_URL = "https://playground.4geeks.com/contact/agendas/vivfeijoo";
 
-  const deleteContact = (id) => {
-    fetch(`${CONTACTS_URL}/${id}`, {
-      method: "DELETE"
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al eliminar el contacto");
-        // Actualiza la lista localmente
-        setContacts(prev => prev.filter(contact => contact.id !== id));
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("No se pudo eliminar el contacto.");
-      });
+  const getContacts = async () => {
+    try {
+      const response = await fetch(`${API_URL}/contacts`);
+      const data = await response.json();
+      setContacts(data.contacts);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+    }
   };
 
+  const deleteContact = async (id) => {
+    try {
+      await fetch(`${API_URL}/contacts/${id}`, {
+        method: "DELETE",
+      });
+      setContacts(contacts.filter((contact) => contact.id !== id));
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+    }
+  };
+
+  useEffect(() => {
+    getContacts();
+  }, []);
+
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Contact List</h2>
-        <button onClick={() => navigate("/add")} className="btn btn-success">
-          Add new contact
-        </button>
+    <div className="container mt-5 custom-container">
+      <h1 className="text-center mb-4">Contact List</h1>
+      <div className="text-end mb-3">
+        <Link to="/add">
+          <button className="btn btn-success custom-button">Add New Contact</button>
+        </Link>
       </div>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      {/* Verificamos que contacts sea un array antes de hacer map */}
-      {Array.isArray(contacts) && contacts.map((contact) => (
-        <ContactCard key={contact.id} contact={contact} onDelete={deleteContact} />
-      ))}
+      <div className="list-group">
+        {contacts.length === 0 ? (
+          <p className="text-center">No contacts available.</p>
+        ) : (
+          contacts.map((contact) => (
+            <ContactCard
+              key={contact.id}
+              contact={contact}
+              onDelete={deleteContact}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
 
 export default Home;
-
