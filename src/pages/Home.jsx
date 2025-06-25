@@ -4,16 +4,24 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const [contacts, setContacts] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const API_URL = "https://playground.4geeks.com/contact/agendas/vivfeijoo";
 
   const getContacts = async () => {
     try {
       const response = await fetch(`${API_URL}/contacts`);
       const data = await response.json();
-      setContacts(data.contacts);
+
+      if (data.contacts && Array.isArray(data.contacts)) {
+        setContacts(data.contacts);
+      } else {
+        setContacts([]);
+      }
     } catch (error) {
       console.error("Error fetching contacts:", error);
+      setContacts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,7 +49,9 @@ const Home = () => {
         </Link>
       </div>
       <div className="list-group">
-        {contacts.length === 0 ? (
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : contacts.length === 0 ? (
           <p className="text-center">No contacts available.</p>
         ) : (
           contacts.map((contact) => (

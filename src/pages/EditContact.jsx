@@ -17,29 +17,29 @@ const EditContact = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchContact = async () => {
-    try {
-      const response = await fetch(`${API_URL}/contacts`);
-      const data = await response.json();
+    const fetchContact = async () => {
+      try {
+        const response = await fetch(`${API_URL}/contacts`);
+        const data = await response.json();
 
-      const contact = data.contacts.find(c => c.id === parseInt(id));
-      if (!contact) throw new Error("Contact not found");
+        const contact = data.contacts.find(c => c.id === parseInt(id));
+        if (!contact) throw new Error("Contact not found");
 
-      setForm({
-        full_name: contact.full_name || contact.name || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        address: contact.address || ""
-      });
+        setForm({
+          full_name: contact.full_name || contact.name || "",
+          email: contact.email || "",
+          phone: contact.phone || "",
+          address: contact.address || ""
+        });
 
-      setLoading(false);
-    } catch (error) {
-      console.error("Error loading contact:", error);
-    }
-  };
+        setLoading(false);
+      } catch (error) {
+        console.error("Error loading contact:", error);
+      }
+    };
 
-  fetchContact();
-}, [id]);
+    fetchContact();
+  }, [id]);
 
   const handleChange = (e) => {
     setForm({
@@ -59,6 +59,7 @@ const EditContact = () => {
         },
         body: JSON.stringify({
           full_name: form.full_name,
+          name: form.full_name,
           email: form.email,
           phone: form.phone,
           address: form.address,
@@ -137,6 +138,3 @@ const EditContact = () => {
 };
 
 export default EditContact;
-
-
-
